@@ -2,17 +2,84 @@ import 'package:flutter/material.dart';
 import 'package:tasarimc/components/my_button2.dart';
 import 'package:tasarimc/components/my_textfield.dart';
 import 'package:tasarimc/screens/Dashboard.dart';
+import 'package:tasarimc/screens/LoginScreen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
 
   // text editing controllers
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   // sign user in method
-  void signUserUp() {}
+  Future signUserUp(BuildContext context) async {
+    const String apiUrl = 'http://192.168.1.109:3000/register';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          action: SnackBarAction(
+            label: 'Kapat',
+            onPressed: () {
+              // Code to execute.
+            },
+          ),
+          content: const Text('Üye kaydı başarılı yönlendiriliyorsun.'),
+          duration: const Duration(milliseconds: 1500),
+          width: 380.0, // Width of the SnackBar.
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0, // Inner padding for SnackBar content.
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          action: SnackBarAction(
+            label: 'Kapat',
+            onPressed: () {
+              // Code to execute.
+            },
+          ),
+          content: const Text('Kullanıcı adı veya mail adresi kullanılıyor.'),
+          duration: const Duration(milliseconds: 1500),
+          width: 380.0, // Width of the SnackBar.
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0, // Inner padding for SnackBar content.
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +92,6 @@ class RegisterPage extends StatelessWidget {
             children: [
               const SizedBox(height: 50),
 
-
               /*
               Text(
                 'Kayıt ol',
@@ -35,11 +101,11 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
               */
-             
+
               //username textfield
               MyTextField(
-                controller: usernameController,
-                hintText: 'kullanıcı adı',
+                controller: _usernameController,
+                hintText: 'Kullanıcı adı',
                 obscureText: false,
               ),
 
@@ -47,8 +113,8 @@ class RegisterPage extends StatelessWidget {
 
               //email textfield
               MyTextField(
-                controller: emailController,
-                hintText: 'email',
+                controller: _emailController,
+                hintText: 'Email',
                 obscureText: false,
               ),
 
@@ -56,23 +122,18 @@ class RegisterPage extends StatelessWidget {
 
               //password textfield
               MyTextField(
-                controller: passwordController,
-                hintText: 'şifre',
+                controller: _passwordController,
+                hintText: 'Şifre',
                 obscureText: true,
               ),
 
-
-             
               const SizedBox(height: 25),
 
               //sign in button
-              MyButton2(
-                onTap: (() {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Dashboard(),));
-                }
-              ),
-              ),
+              const SizedBox(height: 20),
+              MyButton2(onTap: () {
+                signUserUp(context);
+              }),
 
               const SizedBox(height: 50),
 /*
@@ -122,7 +183,6 @@ class RegisterPage extends StatelessWidget {
               //const SizedBox(height: 30),
 
               // not a member? register now
-
             ],
           ),
         ),

@@ -3,16 +3,62 @@ import 'package:tasarimc/components/my_button.dart';
 import 'package:tasarimc/components/my_textfield.dart';
 import 'package:tasarimc/screens/Dashboard.dart';
 import 'package:tasarimc/screens/RegisterScreen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   // text editing controllers
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {}
+  Future signUserIn(BuildContext context) async {
+    final String apiUrl = 'http://192.168.1.109:3000/login';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Dashboard(),
+        ),
+      );
+    } else {
+      // Bir hata oluştu
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          action: SnackBarAction(
+            label: 'Kapat',
+            onPressed: () {
+              // Code to execute.
+            },
+          ),
+          content: const Text('Kullanıcı adı veya şifre hatalı.'),
+          duration: const Duration(milliseconds: 1500),
+          width: 380.0, // Width of the SnackBar.
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0, // Inner padding for SnackBar content.
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +69,10 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
-        
-
               //username textfield
               MyTextField(
-                controller: usernameController,
-                hintText: 'kullanıcı adı',
+                controller: _usernameController,
+                hintText: 'Kullanıcı adı',
                 obscureText: false,
               ),
 
@@ -37,8 +80,8 @@ class LoginPage extends StatelessWidget {
 
               //password textfield
               MyTextField(
-                controller: passwordController,
-                hintText: 'şifre',
+                controller: _passwordController,
+                hintText: 'Şifre',
                 obscureText: true,
               ),
 
@@ -63,12 +106,8 @@ class LoginPage extends StatelessWidget {
               //sign in button
               MyButton(
                 onTap: (() {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Dashboard(),));
-                }
-                
-                
-              ),
+                  signUserIn(context);
+                }),
               ),
 
               const SizedBox(height: 50),
@@ -140,7 +179,7 @@ class LoginPage extends StatelessWidget {
               )
               */
 
-               Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -148,20 +187,20 @@ class LoginPage extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );                   
-                    },
-                    child: Text(
-                      'Hesap oluştur.',
-                      style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                  ),
-                  
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()),
+                        );
+                      },
+                      child: Text(
+                        'Hesap oluştur.',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                 ],
               )
             ],
