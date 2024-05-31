@@ -16,7 +16,7 @@ class RegisterPage extends StatelessWidget {
 
   // sign user in method
   Future signUserUp(BuildContext context) async {
-    const String apiUrl = 'http://192.168.1.109:3000/register';
+    const String apiUrl = 'http://192.168.10.4:3000/register';
 
     final response = await http.post(
       Uri.parse(apiUrl),
