@@ -6,6 +6,8 @@ import 'package:tasarimc/screens/RegisterScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:tasarimc/screens/ResetPass.dart';
+
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -15,7 +17,7 @@ class LoginPage extends StatelessWidget {
 
   // sign user in method
   Future signUserIn(BuildContext context) async {
-    final String apiUrl = 'http://192.168.10.4:3000/login';
+    const String apiUrl = 'http://192.168.10.4:3000/login';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -32,7 +34,7 @@ class LoginPage extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Dashboard(),
+          builder: (context) => const Dashboard(),
         ),
       );
     } else {
@@ -45,10 +47,10 @@ class LoginPage extends StatelessWidget {
               // Code to execute.
             },
           ),
-          content: const Text('Kullanıcı adı veya şifre hatalı.'),
-          duration: const Duration(milliseconds: 1500),
+          content:  const Text('Kullanıcı adı veya şifre hatalı.'),
+          duration:  const Duration(milliseconds: 1500),
           width: 380.0, // Width of the SnackBar.
-          padding: const EdgeInsets.symmetric(
+          padding:  const EdgeInsets.symmetric(
             horizontal: 10.0, // Inner padding for SnackBar content.
           ),
           behavior: SnackBarBehavior.floating,
@@ -63,128 +65,99 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      body: Container(
+        
+        decoration: const BoxDecoration(
+          
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/resim/IMG_0966.jpg',))), 
+        
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              
+              SizedBox(
+                height: 400,
+                child: Card(
+                  elevation: 4.0,
+                  color: Colors.transparent,
+                  margin:  const EdgeInsets.only(left: 20, right: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      
+                       const Text('Giriş Yap',style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 115, 127, 143)),),
+                       const SizedBox(height: 20),
+                  
               //username textfield
               MyTextField(
                 controller: _usernameController,
-                hintText: 'Kullanıcı adı',
-                obscureText: false,
+                hintText: 'kullanıcı adı',
+                obscureText: false, 
+                
               ),
 
-              const SizedBox(height: 10),
+               const SizedBox(height: 10),
 
               //password textfield
               MyTextField(
                 controller: _passwordController,
-                hintText: 'Şifre',
-                obscureText: true,
+                hintText: 'şifre',
+                obscureText: true, 
+                
               ),
 
-              const SizedBox(height: 10),
+               const SizedBox(height: 15),
 
               //forgot password?
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                padding:  const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                         MaterialPageRoute(
+                          builder: (context) => const Resetpass(),
+                         ));
+                      },
+                    
+                    child: Text(
                       'Şifreni mi unuttun?',
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        decoration: TextDecoration.underline
+                      ),
+                    ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 25),
+               const SizedBox(height: 15),
 
               //sign in button
               MyButton(
                 onTap: (() {
                   signUserIn(context);
-                }),
+                  
+                }), text: 'Giriş Yap',
               ),
 
-              const SizedBox(height: 50),
-/*
-              // or continue with
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'Or continue with',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-*/
-/*
-              // google + apple sign in buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // google button
-                  SquareTile(imagePath: 'lib/images/google.png'),
+              const SizedBox(height: 20),
 
-                  SizedBox(width: 25),
-
-                  // apple button
-                  SquareTile(imagePath: 'lib/images/apple.png')
-                ],
-              ),
-*/
-              //const SizedBox(height: 30),
-
-              /*
-
-              // not a member? register now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Not a member?',
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-              */
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Hesabın yok mu?',
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: TextStyle(color: Colors.grey[900]),
                   ),
                   GestureDetector(
                       onTap: () {
@@ -194,11 +167,12 @@ class LoginPage extends StatelessWidget {
                               builder: (context) => RegisterPage()),
                         );
                       },
-                      child: Text(
-                        'Hesap oluştur.',
+                      child:  const Text(
+                        ' Hesap oluştur.',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline
                         ),
                       )),
                 ],
@@ -206,6 +180,12 @@ class LoginPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+          
+            ],
+          
+        ),
+      ),
       ),
     );
   }

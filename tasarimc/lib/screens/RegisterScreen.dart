@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tasarimc/components/my_button2.dart';
+import 'package:tasarimc/components/my_button.dart';
 import 'package:tasarimc/components/my_textfield.dart';
-import 'package:tasarimc/screens/Dashboard.dart';
 import 'package:tasarimc/screens/LoginScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -51,7 +50,7 @@ class RegisterPage extends StatelessWidget {
           ),
         ),
       );
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),
@@ -84,28 +83,43 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/resim/IMG_0966.jpg',))
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
+            children: [             
 
-              /*
-              Text(
-                'Kayıt ol',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                ),
-              ),
-              */
+              SizedBox(
+                height: 470,
+                child: Card(
+                  elevation: 4.0,
+                  color: Colors.transparent,
+                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      
+                      const Text('Kayıt Ol',style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 115, 127, 143)),),
+                      const SizedBox(height: 20),
+
+
 
               //username textfield
               MyTextField(
                 controller: _usernameController,
-                hintText: 'Kullanıcı adı',
+                hintText: 'kullanıcı adı',
                 obscureText: false,
               ),
 
@@ -114,7 +128,7 @@ class RegisterPage extends StatelessWidget {
               //email textfield
               MyTextField(
                 controller: _emailController,
-                hintText: 'Email',
+                hintText: 'e-mail',
                 obscureText: false,
               ),
 
@@ -123,7 +137,7 @@ class RegisterPage extends StatelessWidget {
               //password textfield
               MyTextField(
                 controller: _passwordController,
-                hintText: 'Şifre',
+                hintText: 'şifre',
                 obscureText: true,
               ),
 
@@ -131,58 +145,15 @@ class RegisterPage extends StatelessWidget {
 
               //sign in button
               const SizedBox(height: 20),
-              MyButton2(onTap: () {
+              MyButton(onTap: () {
                 signUserUp(context);
-              }),
+              }, text: 'Kayıt ol',),
 
               const SizedBox(height: 50),
-/*
-              // or continue with
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'Or continue with',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-*/
-/*
-              // google + apple sign in buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // google button
-                  SquareTile(imagePath: 'lib/images/google.png'),
-
-                  SizedBox(width: 25),
-
-                  // apple button
-                  SquareTile(imagePath: 'lib/images/apple.png')
-                ],
-              ),
-*/
-              //const SizedBox(height: 30),
-
-              // not a member? register now
+            ],
+          ),
+        ),
+      ),
             ],
           ),
         ),
