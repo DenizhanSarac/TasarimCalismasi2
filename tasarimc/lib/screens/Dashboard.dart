@@ -42,7 +42,7 @@ class Dashboard extends StatelessWidget{
           //Teknik servis kaydı oluştur.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.grey[300],),
             child: const Column(
@@ -57,7 +57,7 @@ class Dashboard extends StatelessWidget{
           //Teknik servisteki ürünleri listele.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.amber,),
             child: const Column(
@@ -72,7 +72,7 @@ class Dashboard extends StatelessWidget{
           //Alıp satılan ürünleri ekle.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.amber,),
             child: const Column(
@@ -87,7 +87,7 @@ class Dashboard extends StatelessWidget{
           //Alıp satılan ürünleri listele.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.amber,),
             child: const Column(
