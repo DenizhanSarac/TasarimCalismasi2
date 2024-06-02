@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tasarimc/screens/Dashboard.dart';
 import 'package:tasarimc/screens/LoginScreen.dart';
+import 'package:tasarimc/screens/TechnicalAdd.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return  const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Dashboard(),
     );
   }
 }

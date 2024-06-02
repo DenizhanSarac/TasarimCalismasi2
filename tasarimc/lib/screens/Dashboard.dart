@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:tasarimc/screens/BuySellAdd.dart';
 import 'package:tasarimc/screens/TechnicalAdd.dart';
 
 
@@ -57,7 +58,7 @@ class Dashboard extends StatelessWidget{
           //Teknik servisteki ürünleri listele.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Technical()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.amber,),
             child: const Column(
@@ -72,7 +73,7 @@ class Dashboard extends StatelessWidget{
           //Alıp satılan ürünleri ekle.
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Technical()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const BuySell()));
             },
             child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.amber,),
             child: const Column(

@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Technical extends StatefulWidget {
-  const Technical({super.key});
+class BuySell extends StatefulWidget {
+  const BuySell({super.key});
 
   @override
-  _TechnicalState createState() => _TechnicalState();
+  _BuySellState createState() => _BuySellState();
 }
 
-class _TechnicalState extends State<Technical> {
+class _BuySellState extends State<BuySell> {
   final picker = ImagePicker();
   File? image;
 
