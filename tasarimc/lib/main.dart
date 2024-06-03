@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasarimc/screens/buysell_list.dart';
 import 'package:tasarimc/screens/dashboard.dart';
 
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Dashboard(),
+      home: BuySellList(),
     );
   }
 }
