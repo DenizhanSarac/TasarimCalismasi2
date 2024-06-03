@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tasarimc/screens/Dashboard.dart';
-import 'package:tasarimc/screens/LoginScreen.dart';
-import 'package:tasarimc/screens/TechnicalAdd.dart';
+import 'package:tasarimc/screens/dashboard.dart';
+
 
 void main() {
   runApp(const MyApp());

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tasarimc/components/my_button.dart';
 import 'package:tasarimc/components/my_textfield.dart';
-import 'package:tasarimc/screens/Dashboard.dart';
-import 'package:tasarimc/screens/RegisterScreen.dart';
+import 'package:tasarimc/screens/dashboard.dart';
+import 'package:tasarimc/screens/register_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:tasarimc/screens/ResetPass.dart';
+import 'package:tasarimc/screens/reset_pass.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});

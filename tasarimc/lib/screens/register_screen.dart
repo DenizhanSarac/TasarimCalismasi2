@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasarimc/components/my_button.dart';
 import 'package:tasarimc/components/my_textfield.dart';
-import 'package:tasarimc/screens/LoginScreen.dart';
+import 'package:tasarimc/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

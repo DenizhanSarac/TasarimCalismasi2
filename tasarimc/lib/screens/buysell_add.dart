@@ -13,6 +13,8 @@ class BuySell extends StatefulWidget {
 class _BuySellState extends State<BuySell> {
   final picker = ImagePicker();
   File? image;
+  bool isIncome = false;
+  bool isExpense = false;
 
   double get height => MediaQuery.of(context).size.height;
 
@@ -42,15 +44,15 @@ class _BuySellState extends State<BuySell> {
   }
 
   AppBar get _buildAppBar => AppBar(
-    title: const Text("Kayıt Oluştur",style: TextStyle(fontSize: 25)),
-        backgroundColor: Colors.grey[300],
-        leading: const BackButton(color: Colors.black,),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25)
-          )
-        ),
+    title: const Text("Kayıt Oluştur", style: TextStyle(fontSize: 25)),
+    backgroundColor: Colors.grey[300],
+    leading: const BackButton(color: Colors.black,),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(25),
+        bottomRight: Radius.circular(25)
+      )
+    ),
   );
 
   Widget get _buildBody {
@@ -73,6 +75,29 @@ class _BuySellState extends State<BuySell> {
           _buildFormField(label: 'Müşteri adı soyadı', icon: Icons.person_outline),
           SizedBox(height: height * 0.02),
           _buildFormField(label: 'Ücret', icon: Icons.money),
+          SizedBox(height: height * 0.02),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildCheckbox('Gelir', isIncome, (value) {
+                setState(() {
+                  isIncome = value!;
+                  if (isIncome) {
+                    isExpense = false;
+                  }
+                });
+              }),
+              SizedBox(width: height * 0.02),
+              _buildCheckbox('Gider', isExpense, (value) {
+                setState(() {
+                  isExpense = value!;
+                  if (isExpense) {
+                    isIncome = false;
+                  }
+                });
+              }),
+            ],
+          ),
         ],
       ),
     );
@@ -112,6 +137,18 @@ class _BuySellState extends State<BuySell> {
       label: const Text('Galeriden Seç'),
       icon: const Icon(Icons.photo_library),
       onPressed: () => onImageButtonPressed(ImageSource.gallery),
+    );
+  }
+
+  Widget _buildCheckbox(String label, bool value, Function(bool?) onChanged) {
+    return Row(
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+        ),
+        Text(label),
+      ],
     );
   }
 }
