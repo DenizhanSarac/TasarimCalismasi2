@@ -1,5 +1,6 @@
 const pool = require("../db.js");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Kullanıcı kaydı
 const createUser =  async (req, res) => {
@@ -30,7 +31,8 @@ const loginUser= async (req, res) => {
       const user = result.rows[0];
       const validPassword = await bcrypt.compare(password, user.password);
       if (validPassword) {
-        res.status(200).json({ message: 'Login successful' });
+        const token = jwt.sign({ id: user.id },'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz', { expiresIn: '1h' });
+        res.json({ token });
       } else {
         res.status(401).json({ message: 'Invalid credentials' });
       }
@@ -43,8 +45,30 @@ const loginUser= async (req, res) => {
   }
 };
 
+const getUser = async (req, res) =>{
+ console.log("2");
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Yetkisiz erişim' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz');
+    const result = await pool.query('SELECT id, username FROM users WHERE id = $1', [decoded.id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(401).json({ error: 'Yetkisiz erişim' });
+  }
+};
 
 module.exports={
     createUser,
     loginUser,
+    getUser,
 };
