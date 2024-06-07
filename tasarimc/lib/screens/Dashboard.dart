@@ -7,6 +7,7 @@ import 'package:tasarimc/screens/login_screen.dart';
 import 'package:tasarimc/screens/technical_add.dart';
 import 'package:tasarimc/screens/technical_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -35,9 +36,12 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    await dotenv.load(fileName: '.env');
+    final apiLogin = dotenv.env['API_ME'] ?? 'default_api_me';
+    String apiUrl = apiLogin;
 
     final response = await http.get(
-      Uri.parse('http://192.168.1.103:3000/me'),
+      Uri.parse(apiUrl),
       headers: <String, String>{
         'Authorization': token!,
       },
@@ -53,7 +57,6 @@ class _DashboardState extends State<Dashboard> {
         SnackBar(content: Text('Kullanıcı bilgileri getirilemedi!')),
       );
     }
-    print('Hoşgeldin $_username');
   }
 
   @override

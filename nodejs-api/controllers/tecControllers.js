@@ -27,7 +27,6 @@ const loginUser= async (req, res) => {
       [username]
     );
     if (result.rows.length > 0) {
-      console.log("1");
       const user = result.rows[0];
       const validPassword = await bcrypt.compare(password, user.password);
       if (validPassword) {
@@ -46,7 +45,6 @@ const loginUser= async (req, res) => {
 };
 
 const getUser = async (req, res) =>{
- console.log("2");
   const token = req.headers['authorization'];
 
   if (!token) {
@@ -67,8 +65,23 @@ const getUser = async (req, res) =>{
   }
 };
 
+const tsAdd = async (req, res) =>{
+  const { username,model,customer, fee,qr_code } = req.body;
+  try{
+    console.log(req.body);
+    const result = await pool.query(
+      'INSERT INTO teknikservis (username, model, customer_name, fee, qr_code) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [username, model, customer, fee, qr_code]
+    );
+      res.status(201).json(result.rows[0]);
+  }catch(error){
+     console.log(error.message);
+      res.status(401).json({error: error.message});
+  }
+};
 module.exports={
     createUser,
     loginUser,
     getUser,
+    tsAdd,
 };
