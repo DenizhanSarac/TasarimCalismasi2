@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tasarimc/components/my_button.dart';
 import 'package:tasarimc/components/my_textfield.dart';
 import 'package:tasarimc/screens/dashboard.dart';
@@ -8,6 +7,7 @@ import 'package:tasarimc/screens/register_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:tasarimc/screens/reset_pass.dart';
 
@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    print("Buradayım.");
     if (isLoggedIn) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const Dashboard()),
@@ -40,7 +39,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // sign user in method
   Future signUserIn(BuildContext context) async {
-    const String apiUrl = 'http://192.168.1.103:3000/login';
+    await dotenv.load(fileName: '.env');
+    final apiLogin = dotenv.env['API_LOGIN'] ?? 'default_api_login';
+    String apiUrl = apiLogin;
 
     final response = await http.post(
       Uri.parse(apiUrl),

@@ -4,6 +4,7 @@ import 'package:tasarimc/components/my_textfield.dart';
 import 'package:tasarimc/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
@@ -15,7 +16,9 @@ class RegisterPage extends StatelessWidget {
 
   // sign user in method
   Future signUserUp(BuildContext context) async {
-    const String apiUrl = 'http://192.168.1.103:3000/register';
+    await dotenv.load(fileName: '.env');
+    final apiLogin = dotenv.env['API_REGISTER'] ?? 'default_api_register';
+    String apiUrl = apiLogin;
 
     final response = await http.post(
       Uri.parse(apiUrl),
