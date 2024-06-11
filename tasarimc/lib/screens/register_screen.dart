@@ -4,6 +4,7 @@ import 'package:tasarimc/components/my_textfield.dart';
 import 'package:tasarimc/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
@@ -15,7 +16,9 @@ class RegisterPage extends StatelessWidget {
 
   // sign user in method
   Future signUserUp(BuildContext context) async {
-    const String apiUrl = 'http://192.168.10.4:3000/register';
+    await dotenv.load(fileName: '.env');
+    final apiLogin = dotenv.env['API_REGISTER'] ?? 'default_api_register';
+    String apiUrl = apiLogin;
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -85,20 +88,20 @@ class RegisterPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: AssetImage('assets/resim/IMG_0966.jpg',))
-        ),
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage(
+                  'assets/resim/IMG_0966.jpg',
+                ))),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [             
-
+            children: [
               SizedBox(
                 height: 470,
                 child: Card(
@@ -110,50 +113,55 @@ class RegisterPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      
-                      const Text('Kayıt Ol',style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 115, 127, 143)),),
+                      const Text(
+                        'Kayıt Ol',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 115, 127, 143)),
+                      ),
                       const SizedBox(height: 20),
 
+                      //username textfield
+                      MyTextField(
+                        controller: _usernameController,
+                        hintText: 'kullanıcı adı',
+                        obscureText: false,
+                      ),
 
+                      const SizedBox(height: 10),
 
-              //username textfield
-              MyTextField(
-                controller: _usernameController,
-                hintText: 'kullanıcı adı',
-                obscureText: false,
+                      //email textfield
+                      MyTextField(
+                        controller: _emailController,
+                        hintText: 'e-mail',
+                        obscureText: false,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      //password textfield
+                      MyTextField(
+                        controller: _passwordController,
+                        hintText: 'şifre',
+                        obscureText: true,
+                      ),
+
+                      const SizedBox(height: 25),
+
+                      //sign in button
+                      const SizedBox(height: 20),
+                      MyButton(
+                        onTap: () {
+                          signUserUp(context);
+                        },
+                        text: 'Kayıt ol',
+                      ),
+
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                ),
               ),
-
-              const SizedBox(height: 10),
-
-              //email textfield
-              MyTextField(
-                controller: _emailController,
-                hintText: 'e-mail',
-                obscureText: false,
-              ),
-
-              const SizedBox(height: 10),
-
-              //password textfield
-              MyTextField(
-                controller: _passwordController,
-                hintText: 'şifre',
-                obscureText: true,
-              ),
-
-              const SizedBox(height: 25),
-
-              //sign in button
-              const SizedBox(height: 20),
-              MyButton(onTap: () {
-                signUserUp(context);
-              }, text: 'Kayıt ol',),
-
-              const SizedBox(height: 50),
-            ],
-          ),
-        ),
-      ),
             ],
           ),
         ),
