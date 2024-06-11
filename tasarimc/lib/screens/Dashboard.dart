@@ -124,8 +124,11 @@ class _DashboardState extends State<Dashboard> {
             //Teknik servisteki ürünleri listele.
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const TechList()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            TechList(username: _username.toString())));
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TechList extends StatefulWidget {
-  const TechList({super.key});
+  final String username;
+  const TechList({super.key, required this.username});
 
   @override
   _TechListState createState() => _TechListState();
 }
 
 class _TechListState extends State<TechList> {
-  final List<Customer> customers = [
-    Customer(phone: '555-1234', name: 'Ebru', price: 150.0),
-    Customer(phone: '555-5678', name: 'Deniz', price: 200.0),
-  ];
+  List<Customer> customers = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchServiceRequests();
+  }
+
+  Future<void> fetchServiceRequests() async {
+    print(widget.username);
+    final response = await http.get(
+        Uri.parse('http://192.168.1.106:3000/getTsList/${widget.username}'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        customers = data.map((item) => Customer.fromJson(item)).toList();
+      });
+    } else {
+      throw Exception('Failed to load service requests');
+    }
+  }
 
   // Tıklanmış öğeleri takip etmek için bir Set kullanıyoruz
   Set<int> _selectedIndices = Set<int>();
@@ -34,13 +53,13 @@ class _TechListState extends State<TechList> {
             child: ListTile(
               leading: Icon(Icons.person),
               title: Text(
-                customer.name,
+                customers[index].customerName,
                 style: TextStyle(
                   decoration: isSelected ? TextDecoration.lineThrough : null,
                 ),
               ),
               subtitle: Text(
-                'Cihaz: ${customer.phone}\nÜcret: \$${customer.price}',
+                'Cihaz: ${customers[index].model}\nÜcret: ${customers[index].fee} TL',
                 style: TextStyle(
                   decoration: isSelected ? TextDecoration.lineThrough : null,
                 ),
@@ -63,9 +82,21 @@ class _TechListState extends State<TechList> {
 }
 
 class Customer {
-  final String phone;
-  final String name;
-  final double price;
+  final String customerName;
+  final int fee;
+  final String model;
 
-  Customer({required this.phone, required this.name, required this.price});
+  Customer({
+    required this.customerName,
+    required this.fee,
+    required this.model,
+  });
+
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
+      customerName: json['customer_name'],
+      fee: json['fee'],
+      model: json['model'],
+    );
+  }
 }

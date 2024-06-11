@@ -79,9 +79,24 @@ const tsAdd = async (req, res) =>{
       res.status(401).json({error: error.message});
   }
 };
+
+const getTsList = async (req, res) =>{
+  const {username}=req.params;
+  console.log(username);
+  try {
+    const result = await pool.query('SELECT username,customer_name, fee, model FROM teknikservis WHERE username=$1',[username]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
 module.exports={
     createUser,
     loginUser,
     getUser,
     tsAdd,
+    getTsList,
 };
