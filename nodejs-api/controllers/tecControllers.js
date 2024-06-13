@@ -30,7 +30,7 @@ const loginUser= async (req, res) => {
       const user = result.rows[0];
       const validPassword = await bcrypt.compare(password, user.password);
       if (validPassword) {
-        const token = jwt.sign({ id: user.id },'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id },'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz', { expiresIn: '1h' }); //1 saat içinde girmezsen atıyor hesaptan
         res.json({ token });
       } else {
         res.status(401).json({ message: 'Invalid credentials' });

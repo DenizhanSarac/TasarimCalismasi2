@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tasarimc/screens/buysell_add.dart';
+import 'package:tasarimc/screens/buysell_list.dart';
+import 'package:tasarimc/screens/gelirgider.dart';
 import 'package:tasarimc/screens/login_screen.dart';
 import 'package:tasarimc/screens/technical_add.dart';
 import 'package:tasarimc/screens/technical_list.dart';
@@ -181,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
             InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Technical()));
+                    MaterialPageRoute(builder: (context) => const BuySellList()));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -194,6 +196,31 @@ class _DashboardState extends State<Dashboard> {
                     Icon(Icons.list, size: 50, color: Colors.white),
                     SizedBox(height: 10),
                     Text("A.S. Liste",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                          fontSize: 25,
+                        )),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const GelirGider()));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color.fromARGB(255, 255, 139, 30),
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.list, size: 50, color: Colors.white),
+                    SizedBox(height: 10),
+                    Text("Gelir-Gider",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           color: Colors.white,

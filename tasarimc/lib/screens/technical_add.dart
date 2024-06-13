@@ -29,10 +29,12 @@ class _TechnicalState extends State<Technical> {
   final _cihazController = TextEditingController();
   final _musteriController = TextEditingController();
   final _ucretController = TextEditingController();
+  final _arizaController = TextEditingController();
 
   // Değişkenleri tanımlayın
   String cihazMarkaModel = '';
   String musteriAdiSoyadi = '';
+  String ariza = '';
   String ucret = '';
 
   @override
@@ -216,7 +218,7 @@ class _TechnicalState extends State<Technical> {
 
   Widget get _buildBody {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           _buildFloatingActionButtons,
@@ -239,10 +241,24 @@ class _TechnicalState extends State<Technical> {
               label: 'Müşteri adı soyadı',
               icon: Icons.person_outline,
               controller: _musteriController),
+              
           SizedBox(height: height * 0.02),
           _buildFormField(
-              label: 'Ücret', icon: Icons.money, controller: _ucretController),
-          MyButton(onTap: addTsVariable, text: "Kaydet"),
+            label: 'Ürünün arızası',
+            icon: Icons.mobile_friendly_sharp,
+            controller: _arizaController,),
+
+          SizedBox(height: height * 0.02),
+          _buildFormField(
+              label: 'Ücret', icon: Icons.money, 
+              controller: _ucretController),
+
+          ElevatedButton(onPressed: addTsVariable, 
+          style: ElevatedButton.styleFrom(minimumSize: const Size(100, 50)),
+          child: const Text('Kaydet'))
+
+          //MyButton(onTap: addTsVariable, text: "Kaydet"),
+          
         ],
       ),
     );

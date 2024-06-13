@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TechList extends StatefulWidget {
   final String username;
@@ -12,16 +13,19 @@ class TechList extends StatefulWidget {
 
 class _TechListState extends State<TechList> {
   List<Customer> customers = [];
+  Set<int> _selectedIndices = Set<int>();
+  String _filter = 'Hepsi';
+
   @override
   void initState() {
     super.initState();
     fetchServiceRequests();
+    _loadSelectedIndices();
   }
 
   Future<void> fetchServiceRequests() async {
-    print(widget.username);
     final response = await http.get(
-        Uri.parse('http://192.168.1.106:3000/getTsList/${widget.username}'));
+        Uri.parse('http://192.168.1.142:3000/getTsList/${widget.username}'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
@@ -33,33 +37,89 @@ class _TechListState extends State<TechList> {
     }
   }
 
-  // Tıklanmış öğeleri takip etmek için bir Set kullanıyoruz
-  Set<int> _selectedIndices = Set<int>();
+  Future<void> _loadSelectedIndices() async {
+    final prefs = await SharedPreferences.getInstance();
+    final selectedIndices = prefs.getStringList('selectedIndices') ?? [];
+    setState(() {
+      _selectedIndices = selectedIndices.map((index) => int.parse(index)).toSet();
+    });
+  }
+
+  Future<void> _saveSelectedIndices() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('selectedIndices', _selectedIndices.map((index) => index.toString()).toList());
+  }
+
+  List<Customer> get _filteredCustomers {
+    if (_filter == 'Tamamlandı') {
+      return customers
+          .asMap()
+          .entries
+          .where((entry) => _selectedIndices.contains(entry.key))
+          .map((entry) => entry.value)
+          .toList();
+    } else if (_filter == 'Tamamlanmadı') {
+      return customers
+          .asMap()
+          .entries
+          .where((entry) => !_selectedIndices.contains(entry.key))
+          .map((entry) => entry.value)
+          .toList();
+    }
+    return customers;
+  }
+
+  int get _totalEarnings {
+    return customers
+        .asMap()
+        .entries
+        .where((entry) => _selectedIndices.contains(entry.key))
+        .map((entry) => entry.value.fee)
+        .fold(0, (prev, amount) => prev + amount);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Teknik Servis Takip Listesi'),
+        actions: [
+          DropdownButton<String>(
+            value: _filter,
+            items: <String>['Hepsi', 'Tamamlandı', 'Tamamlanmadı']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _filter = newValue!;
+              });
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
-        itemCount: customers.length,
+        itemCount: _filteredCustomers.length,
         itemBuilder: (context, index) {
-          final customer = customers[index];
-          final isSelected = _selectedIndices.contains(index);
+          final customer = _filteredCustomers[index];
+          final originalIndex = customers.indexOf(customer);
+          final isSelected = _selectedIndices.contains(originalIndex);
 
           return Card(
             margin: EdgeInsets.all(8.0),
             child: ListTile(
               leading: Icon(Icons.person),
               title: Text(
-                customers[index].customerName,
+                customer.customerName,
                 style: TextStyle(
                   decoration: isSelected ? TextDecoration.lineThrough : null,
                 ),
               ),
               subtitle: Text(
-                'Cihaz: ${customers[index].model}\nÜcret: ${customers[index].fee} TL',
+                'Cihaz: ${customer.model}\nÜcret: ${customer.fee} TL',
                 style: TextStyle(
                   decoration: isSelected ? TextDecoration.lineThrough : null,
                 ),
@@ -67,15 +127,25 @@ class _TechListState extends State<TechList> {
               onTap: () {
                 setState(() {
                   if (isSelected) {
-                    _selectedIndices.remove(index);
+                    _selectedIndices.remove(originalIndex);
                   } else {
-                    _selectedIndices.add(index);
+                    _selectedIndices.add(originalIndex);
                   }
+                  _saveSelectedIndices();
                 });
               },
             ),
           );
         },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Toplam Kar: $_totalEarnings TL',
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
       ),
     );
   }
