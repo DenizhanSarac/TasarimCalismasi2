@@ -11,6 +11,7 @@ router.put("/updateTsStatus/:id", tecController.updateTsStatus);
 router.post("/addBuySell",tecController.addBuyySell);
 router.get("/getBsList/:username",tecController.getBsList);
 router.put("/updateBsStatus/:id", tecController.updateBsStatus);
+router.get("/getProfitList/:username",tecController.getProfitList);
 
 
 module.exports = router;

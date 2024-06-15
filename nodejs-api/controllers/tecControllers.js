@@ -135,6 +135,18 @@ const updateBsStatus = async(req, res) =>{
     res.status(500).json({ error: 'Database update failed' });
   }
 };
+
+const getProfitList = async (req, res) =>{
+  const {username}=req.params;
+  try {
+    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell FROM alimSatim WHERE username=$1',[username]);
+    console.log(result.rows);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports={
     createUser,
     loginUser,
@@ -145,4 +157,5 @@ module.exports={
     addBuyySell,
     getBsList,
     updateBsStatus,
+    getProfitList,
 };
