@@ -1,6 +1,4 @@
-import 'dart:collection';
 import 'dart:io';
-import 'package:tasarimc/components/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -59,6 +57,7 @@ class _TechnicalState extends State<Technical> {
     _cihazController.dispose();
     _musteriController.dispose();
     _ucretController.dispose();
+    _arizaController.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -105,6 +104,7 @@ class _TechnicalState extends State<Technical> {
       cihazMarkaModel = _cihazController.text;
       musteriAdiSoyadi = _musteriController.text;
       ucret = _ucretController.text;
+      ariza = _arizaController.text;
     });
 
     final response = await http.post(
@@ -118,6 +118,7 @@ class _TechnicalState extends State<Technical> {
         'customer': musteriAdiSoyadi,
         'fee': ucret,
         'qr_code': _qrTextFromGallery,
+        'ariza': ariza,
       }),
     );
     if (response.statusCode == 201) {
@@ -241,24 +242,24 @@ class _TechnicalState extends State<Technical> {
               label: 'Müşteri adı soyadı',
               icon: Icons.person_outline,
               controller: _musteriController),
-              
+
           SizedBox(height: height * 0.02),
           _buildFormField(
             label: 'Ürünün arızası',
             icon: Icons.mobile_friendly_sharp,
-            controller: _arizaController,),
+            controller: _arizaController,
+          ),
 
           SizedBox(height: height * 0.02),
           _buildFormField(
-              label: 'Ücret', icon: Icons.money, 
-              controller: _ucretController),
+              label: 'Ücret', icon: Icons.money, controller: _ucretController),
 
-          ElevatedButton(onPressed: addTsVariable, 
-          style: ElevatedButton.styleFrom(minimumSize: const Size(100, 50)),
-          child: const Text('Kaydet'))
+          ElevatedButton(
+              onPressed: addTsVariable,
+              style: ElevatedButton.styleFrom(minimumSize: const Size(100, 50)),
+              child: const Text('Kaydet'))
 
           //MyButton(onTap: addTsVariable, text: "Kaydet"),
-          
         ],
       ),
     );

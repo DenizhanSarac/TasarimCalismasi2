@@ -182,8 +182,11 @@ class _DashboardState extends State<Dashboard> {
             //Alıp satılan ürünleri listele.
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const BuySellList()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BuySellList(username: _username.toString())));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -207,8 +210,10 @@ class _DashboardState extends State<Dashboard> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const GelirGider()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const GelirGider()));
               },
               child: Container(
                 decoration: BoxDecoration(
