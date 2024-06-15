@@ -7,7 +7,6 @@ const createUser =  async (req, res) => {
   const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    console.log(req.body);
     const result = await pool.query(
       'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
       [username, email, hashedPassword]
@@ -21,7 +20,6 @@ const createUser =  async (req, res) => {
 const loginUser= async (req, res) => {
   const { username, password } = req.body;
   try {
-    console.log(req.body);
     const result = await pool.query(
       'SELECT * FROM users WHERE username = $1',
       [username]
@@ -46,7 +44,6 @@ const loginUser= async (req, res) => {
 
 const getUser = async (req, res) =>{
   const token = req.headers['authorization'];
-
   if (!token) {
     return res.status(401).json({ error: 'Yetkisiz erişim' });
   }
@@ -66,12 +63,11 @@ const getUser = async (req, res) =>{
 };
 
 const tsAdd = async (req, res) =>{
-  const { username,model,customer, fee,qr_code } = req.body;
+  const { username,model,customer, fee,qr_code,ariza } = req.body;
   try{
-    console.log(req.body);
     const result = await pool.query(
-      'INSERT INTO teknikservis (username, model, customer_name, fee, qr_code) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [username, model, customer, fee, qr_code]
+      'INSERT INTO teknikservis (username, model, customer_name, fee, qr_code,ariza) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [username, model, customer, fee, qr_code, ariza]
     );
       res.status(201).json(result.rows[0]);
   }catch(error){
@@ -82,9 +78,9 @@ const tsAdd = async (req, res) =>{
 
 const getTsList = async (req, res) =>{
   const {username}=req.params;
-  console.log(username);
   try {
-    const result = await pool.query('SELECT username,customer_name, fee, model FROM teknikservis WHERE username=$1',[username]);
+    const result = await pool.query('SELECT id,username,customer_name, fee, model, ariza, isfinished FROM teknikservis WHERE username=$1',[username]);
+    console.log(result.rows);
     res.status(200).json(result.rows);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -93,10 +89,73 @@ const getTsList = async (req, res) =>{
 
 
 
+const updateTsStatus = async(req, res) =>{
+  const { id } = req.params;
+  try {
+    const result = await pool.query('UPDATE teknikservis SET isfinished = TRUE WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database update failed' });
+  }
+};
+
+const addBuyySell = async(req, res) =>{
+  const { username,model,customer, fee,qr_code,issell } = req.body;
+  try{
+    const result = await pool.query(
+      'INSERT INTO alimsatim (username, model, customer_name, fee, qr_code, issell) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [username, model, customer, fee, qr_code, issell]
+    );
+      res.status(201).json(result.rows[0]);
+  }catch(error){
+     console.log(error.message);
+      res.status(401).json({error: error.message});
+  }
+};
+
+const getBsList = async (req, res) =>{
+  const {username}=req.params;
+  try {
+    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell FROM alimSatim WHERE username=$1',[username]);
+    console.log(result.rows);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const updateBsStatus = async(req, res) =>{
+  const { id } = req.params;
+  try {
+    const result = await pool.query('UPDATE alimsatim SET issell = TRUE WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database update failed' });
+  }
+};
+
+const getProfitList = async (req, res) =>{
+  const {username}=req.params;
+  try {
+    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell FROM alimSatim WHERE username=$1',[username]);
+    console.log(result.rows);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports={
     createUser,
     loginUser,
     getUser,
     tsAdd,
     getTsList,
+    updateTsStatus,
+    addBuyySell,
+    getBsList,
+    updateBsStatus,
+    getProfitList,
 };

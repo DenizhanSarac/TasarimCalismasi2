@@ -38,6 +38,12 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+
+    if (token == null) {
+      logOut(context);
+      return;
+    }
+
     await dotenv.load(fileName: '.env');
     final apiLogin = dotenv.env['API_ME'] ?? 'default_api_me';
     String apiUrl = apiLogin;
@@ -45,7 +51,7 @@ class _DashboardState extends State<Dashboard> {
     final response = await http.get(
       Uri.parse(apiUrl),
       headers: <String, String>{
-        'Authorization': token!,
+        'Authorization': token,
       },
     );
 
@@ -55,9 +61,7 @@ class _DashboardState extends State<Dashboard> {
         _username = responseData['username'];
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Kullanıcı bilgileri getirilemedi!')),
-      );
+      logOut(context);
     }
   }
 
@@ -182,8 +186,11 @@ class _DashboardState extends State<Dashboard> {
             //Alıp satılan ürünleri listele.
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const BuySellList()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BuySellList(username: _username.toString())));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -207,8 +214,12 @@ class _DashboardState extends State<Dashboard> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const GelirGider()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GelirGider(
+                              username: _username.toString(),
+                            )));
               },
               child: Container(
                 decoration: BoxDecoration(

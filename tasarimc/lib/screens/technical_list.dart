@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TechList extends StatefulWidget {
   final String username;
@@ -13,20 +13,19 @@ class TechList extends StatefulWidget {
 
 class _TechListState extends State<TechList> {
   List<Customer> customers = [];
-  Set<int> _selectedIndices = Set<int>();
-  String _filter = 'Hepsi';
+  String _filter = 'Tamamlanmadı';
 
   @override
   void initState() {
     super.initState();
     fetchServiceRequests();
-    _loadSelectedIndices();
   }
 
   Future<void> fetchServiceRequests() async {
     final response = await http.get(
-        Uri.parse('http://192.168.1.142:3000/getTsList/${widget.username}'));
+        Uri.parse('http://192.168.1.110:3000/getTsList/${widget.username}'));
 
+    print(response.body);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       setState(() {
@@ -37,45 +36,33 @@ class _TechListState extends State<TechList> {
     }
   }
 
-  Future<void> _loadSelectedIndices() async {
-    final prefs = await SharedPreferences.getInstance();
-    final selectedIndices = prefs.getStringList('selectedIndices') ?? [];
-    setState(() {
-      _selectedIndices = selectedIndices.map((index) => int.parse(index)).toSet();
-    });
-  }
-
-  Future<void> _saveSelectedIndices() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('selectedIndices', _selectedIndices.map((index) => index.toString()).toList());
-  }
-
   List<Customer> get _filteredCustomers {
     if (_filter == 'Tamamlandı') {
-      return customers
-          .asMap()
-          .entries
-          .where((entry) => _selectedIndices.contains(entry.key))
-          .map((entry) => entry.value)
-          .toList();
+      return customers.where((customer) => customer.isFinished).toList();
     } else if (_filter == 'Tamamlanmadı') {
-      return customers
-          .asMap()
-          .entries
-          .where((entry) => !_selectedIndices.contains(entry.key))
-          .map((entry) => entry.value)
-          .toList();
+      return customers.where((customer) => !customer.isFinished).toList();
     }
     return customers;
   }
 
   int get _totalEarnings {
     return customers
-        .asMap()
-        .entries
-        .where((entry) => _selectedIndices.contains(entry.key))
-        .map((entry) => entry.value.fee)
+        .where((customer) => customer.isFinished)
+        .map((customer) => customer.fee)
         .fold(0, (prev, amount) => prev + amount);
+  }
+
+  Future<void> _updateCustomerStatus(int id) async {
+    final response = await http
+        .put(Uri.parse('http://192.168.1.110:3000/updateTsStatus/$id'));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        customers.firstWhere((customer) => customer.id == id).isFinished = true;
+      });
+    } else {
+      throw Exception('Failed to update customer status');
+    }
   }
 
   @override
@@ -105,8 +92,6 @@ class _TechListState extends State<TechList> {
         itemCount: _filteredCustomers.length,
         itemBuilder: (context, index) {
           final customer = _filteredCustomers[index];
-          final originalIndex = customers.indexOf(customer);
-          final isSelected = _selectedIndices.contains(originalIndex);
 
           return Card(
             margin: EdgeInsets.all(8.0),
@@ -115,24 +100,21 @@ class _TechListState extends State<TechList> {
               title: Text(
                 customer.customerName,
                 style: TextStyle(
-                  decoration: isSelected ? TextDecoration.lineThrough : null,
+                  decoration:
+                      customer.isFinished ? TextDecoration.lineThrough : null,
                 ),
               ),
               subtitle: Text(
-                'Cihaz: ${customer.model}\nÜcret: ${customer.fee} TL',
+                'Cihaz: ${customer.model} \nAriza: ${customer.ariza} \nÜcret: ${customer.fee} TL',
                 style: TextStyle(
-                  decoration: isSelected ? TextDecoration.lineThrough : null,
+                  decoration:
+                      customer.isFinished ? TextDecoration.lineThrough : null,
                 ),
               ),
               onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    _selectedIndices.remove(originalIndex);
-                  } else {
-                    _selectedIndices.add(originalIndex);
-                  }
-                  _saveSelectedIndices();
-                });
+                if (!customer.isFinished) {
+                  _updateCustomerStatus(customer.id);
+                }
               },
             ),
           );
@@ -155,11 +137,17 @@ class Customer {
   final String customerName;
   final int fee;
   final String model;
+  final String ariza;
+  bool isFinished;
+  final int id;
 
   Customer({
     required this.customerName,
     required this.fee,
     required this.model,
+    required this.ariza,
+    required this.isFinished,
+    required this.id,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) {
@@ -167,6 +155,9 @@ class Customer {
       customerName: json['customer_name'],
       fee: json['fee'],
       model: json['model'],
+      ariza: json['ariza'],
+      isFinished: json['isfinished'],
+      id: json['id'],
     );
   }
 }

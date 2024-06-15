@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class GelirGider extends StatefulWidget {
-  const GelirGider({super.key});
+  final String username;
+  const GelirGider({super.key, required this.username});
 
   @override
   State<GelirGider> createState() => _GelirGiderState();
 }
 
 class _GelirGiderState extends State<GelirGider> {
+  @override
+  void initState() {
+    super.initState();
+    fetchServiceRequests();
+  }
+
+  Future<void> fetchServiceRequests() async {
+    final response = await http.get(Uri.parse(
+        'http://192.168.1.110:3000/getProfitList/${widget.username}'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      setState(() {});
+    } else {
+      throw Exception('Failed to load service requests');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +43,6 @@ class _GelirGiderState extends State<GelirGider> {
             _buildCard('Kazanılan Para', '₺1000', Colors.grey),
             _buildCard('Gider', '₺500', Colors.grey),
             _buildCard('Kar', '₺500', Colors.grey),
-
           ],
         ),
       ),
