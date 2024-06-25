@@ -19,7 +19,7 @@ class _GelirGiderState extends State<GelirGider> {
 
   Future<void> fetchServiceRequests() async {
     final response = await http.get(Uri.parse(
-        'http://192.168.1.110:3000/getProfitList/${widget.username}'));
+        'http://192.168.1.102:3000/getProfitList/${widget.username}'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
@@ -33,7 +33,12 @@ class _GelirGiderState extends State<GelirGider> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gelir Gider Takip'),
+        title: const Text('Gelir Gider Takip', style: TextStyle(fontSize: 25)),
+        backgroundColor: Colors.grey[300],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25))),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

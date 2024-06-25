@@ -71,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: const Text("Anasayfa",
             style: TextStyle(fontSize: 25, color: Colors.white)),
-        backgroundColor: const Color.fromARGB(255, 255, 139, 30),
+        backgroundColor: Color.fromARGB(255, 115, 127, 143),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(25),
@@ -109,7 +109,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 255, 139, 30),
+                  color: const Color.fromARGB(255, 115, 127, 143),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +139,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 255, 139, 30),
+                  color: const Color.fromARGB(255, 115, 127, 143),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 255, 139, 30),
+                  color: const Color.fromARGB(255, 115, 127, 143),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +195,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 255, 139, 30),
+                  color: const Color.fromARGB(255, 115, 127, 143),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -224,7 +224,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 255, 139, 30),
+                  color: const Color.fromARGB(255, 115, 127, 143),
                 ),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,

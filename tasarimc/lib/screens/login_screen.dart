@@ -142,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 15),
 
+                      /*
                       //forgot password?
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
 
                       const SizedBox(height: 15),
 

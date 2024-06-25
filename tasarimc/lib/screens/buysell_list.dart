@@ -67,7 +67,12 @@ class _BuySellListState extends State<BuySellList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ürün Listesi'),
+        title: Text('Ürün Listesi', style: TextStyle(fontSize: 25)),
+        backgroundColor: Colors.grey[300],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25))),
         actions: [
           DropdownButton<String>(
             value: _filter,
