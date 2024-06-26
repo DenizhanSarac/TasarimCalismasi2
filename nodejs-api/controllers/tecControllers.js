@@ -138,13 +138,43 @@ const updateBsStatus = async(req, res) =>{
 
 const getProfitList = async (req, res) =>{
   const {username}=req.params;
-  try {
-    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell FROM alimSatim WHERE username=$1',[username]);
-    console.log(result.rows);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  try{
+    const incomeQuery = `
+    SELECT SUM(fee) AS fee
+    FROM alimsatim
+    WHERE username = $1
+  `;
+  const incomeResult = await pool.query(incomeQuery, [username]);
+  const income = incomeResult.rows[0].fee || 0;
+
+  const incomeQuery2 = `
+    SELECT SUM(fee) AS fee1
+    FROM teknikservis
+    WHERE username = $1 and isfinished= 'true'
+  `;
+  const incomeResult2 = await pool.query(incomeQuery2, [username]);
+  const income2 = incomeResult2.rows[0].fee1 || 0;
+
+const expenseQuery = `
+    SELECT SUM(alisfiyati) AS alisfiyati
+    FROM alimsatim
+    WHERE username = $1 AND issell = 'true'
+  `;
+    const expenseResult = await pool.query(expenseQuery, [username]);
+    const expense = expenseResult.rows[0].alisfiyati || 0;
+    var totalIncome=parseInt(income)+parseInt(income2);
+    var earnedMoney = parseInt(totalIncome)-parseInt(expense);
+    res.json({
+      earnedMoney,
+      totalIncome,
+      expense
+    });
   }
+  catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+ 
 };
 
 module.exports={

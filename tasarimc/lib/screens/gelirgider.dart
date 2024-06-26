@@ -11,6 +11,7 @@ class GelirGider extends StatefulWidget {
 }
 
 class _GelirGiderState extends State<GelirGider> {
+  Map<String, dynamic> finances = {};
   @override
   void initState() {
     super.initState();
@@ -19,11 +20,13 @@ class _GelirGiderState extends State<GelirGider> {
 
   Future<void> fetchServiceRequests() async {
     final response = await http.get(Uri.parse(
-        'http://192.168.1.102:3000/getProfitList/${widget.username}'));
+        'http://192.168.1.110:3000/getProfitList/${widget.username}'));
 
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-      setState(() {});
+      final data = jsonDecode(response.body);
+      setState(() {
+        finances = data;
+      });
     } else {
       throw Exception('Failed to load service requests');
     }
@@ -45,9 +48,10 @@ class _GelirGiderState extends State<GelirGider> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildCard('Kazanılan Para', '₺1000', Colors.grey),
-            _buildCard('Gider', '₺500', Colors.grey),
-            _buildCard('Kar', '₺500', Colors.grey),
+            _buildCard('Kazanılan Para', finances['totalIncome'].toString(),
+                Colors.grey),
+            _buildCard('Gider', finances['expense'].toString(), Colors.grey),
+            _buildCard('Kar', finances['earnedMoney'].toString(), Colors.grey),
           ],
         ),
       ),
