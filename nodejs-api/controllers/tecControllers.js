@@ -63,11 +63,11 @@ const getUser = async (req, res) =>{
 };
 
 const tsAdd = async (req, res) =>{
-  const { username,model,customer, fee,qr_code,ariza } = req.body;
+  const { username,model,customer, fee,qr_code,ariza,isfinished } = req.body;
   try{
     const result = await pool.query(
-      'INSERT INTO teknikservis (username, model, customer_name, fee, qr_code,ariza) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [username, model, customer, fee, qr_code, ariza]
+      'INSERT INTO teknikservis (username, model, customer_name, fee, qr_code,ariza,isfinished) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [username, model, customer, fee, qr_code, ariza, isfinished]
     );
       res.status(201).json(result.rows[0]);
   }catch(error){
