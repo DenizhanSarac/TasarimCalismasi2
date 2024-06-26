@@ -103,6 +103,7 @@ class _TechnicalState extends State<Technical> {
       cihazMarkaModel = _cihazController.text;
       musteriAdiSoyadi = _musteriController.text;
       ucret = _ucretController.text;
+      ariza = _arizaController.text;
     });
 
     final response = await http.post(
@@ -116,6 +117,8 @@ class _TechnicalState extends State<Technical> {
         'customer': musteriAdiSoyadi,
         'fee': ucret,
         'qr_code': _qrTextFromGallery,
+        'ariza': ariza,
+        'isfinished': false,
       }),
     );
     if (response.statusCode == 201) {
@@ -238,23 +241,25 @@ class _TechnicalState extends State<Technical> {
                 label: 'Müşteri adı soyadı',
                 icon: Icons.person_outline,
                 controller: _musteriController),
-                
             SizedBox(height: height * 0.02),
             _buildFormField(
               label: 'Ürünün arızası',
               icon: Icons.mobile_friendly_sharp,
-              controller: _arizaController,),
-
+              controller: _arizaController,
+            ),
             SizedBox(height: height * 0.02),
             _buildFormField(
-                label: 'Ücret', icon: Icons.money, 
+                label: 'Ücret',
+                icon: Icons.money,
                 controller: _ucretController),
-
-
-            const SizedBox(height: 30,),
-            ElevatedButton(onPressed: addTsVariable, 
-            style: ElevatedButton.styleFrom(minimumSize: const Size(100, 50)),
-            child: const Text('Kaydet'))
+            const SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
+                onPressed: addTsVariable,
+                style:
+                    ElevatedButton.styleFrom(minimumSize: const Size(100, 50)),
+                child: const Text('Kaydet'))
           ],
         ),
       ),
@@ -302,4 +307,3 @@ class _TechnicalState extends State<Technical> {
     );
   }
 }
-
