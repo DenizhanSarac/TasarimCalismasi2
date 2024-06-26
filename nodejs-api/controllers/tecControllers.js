@@ -101,11 +101,11 @@ const updateTsStatus = async(req, res) =>{
 };
 
 const addBuyySell = async(req, res) =>{
-  const { username,model,customer, fee,qr_code,issell } = req.body;
+  const { username,model,customer, fee,qr_code,issell,alisfiyati } = req.body;
   try{
     const result = await pool.query(
-      'INSERT INTO alimsatim (username, model, customer_name, fee, qr_code, issell) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [username, model, customer, fee, qr_code, issell]
+      'INSERT INTO alimsatim (username, model, customer_name, fee, qr_code, issell,alisfiyati) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [username, model, customer, fee, qr_code, issell, alisfiyati]
     );
       res.status(201).json(result.rows[0]);
   }catch(error){
@@ -117,7 +117,7 @@ const addBuyySell = async(req, res) =>{
 const getBsList = async (req, res) =>{
   const {username}=req.params;
   try {
-    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell FROM alimSatim WHERE username=$1',[username]);
+    const result = await pool.query('SELECT id,username,customer_name, fee, model, issell, alisfiyati FROM alimSatim WHERE username=$1',[username]);
     console.log(result.rows);
     res.status(200).json(result.rows);
   } catch (error) {

@@ -27,11 +27,13 @@ class _BuySellState extends State<BuySell> {
   final _cihazController = TextEditingController();
   final _musteriController = TextEditingController();
   final _ucretController = TextEditingController();
+  final _alisFiyatiController = TextEditingController();
 
   // Değişkenleri tanımlayın
   String cihazMarkaModel = '';
   String musteriAdiSoyadi = '';
   String ucret = '';
+  String alisFiyati = '';
 
   @override
   void initState() {
@@ -46,6 +48,7 @@ class _BuySellState extends State<BuySell> {
     _cihazController.dispose();
     _musteriController.dispose();
     _ucretController.dispose();
+    _alisFiyatiController.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -101,6 +104,7 @@ class _BuySellState extends State<BuySell> {
       cihazMarkaModel = _cihazController.text;
       musteriAdiSoyadi = _musteriController.text;
       ucret = _ucretController.text;
+      alisFiyati = _alisFiyatiController.text;
     });
 
     final response = await http.post(
@@ -115,6 +119,7 @@ class _BuySellState extends State<BuySell> {
         'fee': ucret,
         'qr_code': _qrTextFromGallery,
         'issell': false,
+        'alisfiyati': alisFiyati,
       }),
     );
     if (response.statusCode == 201) {
@@ -239,7 +244,15 @@ class _BuySellState extends State<BuySell> {
 
           SizedBox(height: height * 0.02),
           _buildFormField(
-              label: 'Ücret', icon: Icons.money, controller: _ucretController),
+              label: 'Alış Fiyati',
+              icon: Icons.person_outline,
+              controller: _alisFiyatiController),
+
+          SizedBox(height: height * 0.02),
+          _buildFormField(
+              label: 'Satış Fiyati',
+              icon: Icons.money,
+              controller: _ucretController),
 
           ElevatedButton(
               onPressed: addBuySell,
