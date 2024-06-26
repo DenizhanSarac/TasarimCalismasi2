@@ -19,6 +19,7 @@ class _BuySellListState extends State<BuySellList> {
   void initState() {
     super.initState();
     fetchServiceRequests();
+    _calculateProfit();
   }
 
   Future<void> fetchServiceRequests() async {
@@ -31,6 +32,7 @@ class _BuySellListState extends State<BuySellList> {
       setState(() {
         product = data.map((item) => CustomerBuySell.fromJson(item)).toList();
       });
+      print(product[0].id);
     } else {
       throw Exception('Failed to load service requests');
     }
@@ -54,10 +56,15 @@ class _BuySellListState extends State<BuySellList> {
     for (var i = 0; i < product.length; i++) {
       if (product.contains(i)) {
         if (product[i].isSell) {
+          profit += product[i].fee - product[i].alisFiyati;
+        } else if (!product[i].isSell) {
+          profit -= product[i].alisFiyati;
+        }
+        /* if (product[i].isSell) {
           profit += product[i].fee;
         } else if (!product[i].isSell) {
           profit -= product[i].fee;
-        }
+        }*/
       }
     }
     return profit;
@@ -161,13 +168,14 @@ class CustomerBuySell {
   final String model;
   bool isSell;
   final int id;
-
+  final int alisFiyati;
   CustomerBuySell({
     required this.customerName,
     required this.fee,
     required this.model,
     required this.isSell,
     required this.id,
+    required this.alisFiyati,
   });
 
   factory CustomerBuySell.fromJson(Map<String, dynamic> json) {
@@ -177,6 +185,7 @@ class CustomerBuySell {
       model: json['model'],
       isSell: json['issell'],
       id: json['id'],
+      alisFiyati: json['alisfiyati'],
     );
   }
 }
